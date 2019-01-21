@@ -1,0 +1,47 @@
+{
+  "/sample": {
+    "x-swagger-router-controller": "Example",
+    "get": {
+      "description": "Edit your description",
+      "operationId": "findExamples",
+      "produces": [
+        "application/json"
+      ],
+      "parameters": [
+        {
+          "name": "arg",
+          "in": "query",
+          "description": "Default arg",
+          "required": false,
+          "type": "string"
+        },
+        {
+          "name": "limit",
+          "in": "query",
+          "description": "maximum number of results to return",
+          "required": false,
+          "type": "integer",
+          "format": "int32"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Some response",
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "./definitions/defaults.json#/Example"
+            }
+          }
+        },
+        "default": {
+          "description": "unexpected error",
+          "schema": {
+            "$ref": "./definitions/error.json#/ErrorModel"
+          }
+        }
+      }
+    }
+  }
+
+}
