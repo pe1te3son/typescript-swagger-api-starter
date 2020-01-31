@@ -8,7 +8,7 @@
       "name": "MIT"
     }
   },
-  "basePath": "/api",
+  "basePath": "/v1",
   "schemes": [
     "http"
   ],
