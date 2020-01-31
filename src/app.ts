@@ -1,7 +1,8 @@
 import express from 'express';
 import { json, urlencoded } from 'body-parser';
 import compression from 'compression';
-import { create } from 'swagger-express-mw';
+import { create } from 'swagger-node-runner';
+import swaggerUi from 'swagger-ui-express';
 import { resolve } from 'path';
 import { dereference } from 'json-schema-ref-parser';
 import morgan from 'morgan';
@@ -17,10 +18,16 @@ class ExpressApi {
   async configure(): Promise<void> {
     const swaggerConfig = await this.getSwaggerConfiguration();
     create(swaggerConfig, (err, swagger) => {
-      this.configureMidleware();
+      if (err) { throw (err); }
       this.setupAuthentication();
-      swagger.register(this.app);
+      this.configureMidleware();
+      this.intiateSwaggerUi(swaggerConfig.swagger);
+      swagger.expressMiddleware().register(this.app);
     });
+  }
+
+  private intiateSwaggerUi(schema: any) {
+    this.app.use('/v1/powerapps/api-docs', swaggerUi.serve, swaggerUi.setup(schema, true));
   }
 
   private async getSwaggerConfiguration(): Promise<{appRoot: string, swagger: Object}> {
@@ -39,7 +46,7 @@ class ExpressApi {
   }
 
   private setupAuthentication() {
-    this.app.use((req, res, next) => {
+    this.app.use((req: Express.Request, res: Express.Response, next) => {
       // Implement authentication here
       next();
     });
